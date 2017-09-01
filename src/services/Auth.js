@@ -15,7 +15,7 @@ class Auth {
         var url = 'https://accounts.spotify.com/authorize',
             scopes = ['user-read-private', 'playlist-read-private', 'user-library-read'],
             width = 450,
-            height = 730,
+            height = 700,
             left = (window.screen.width / 2) - (width / 2),
             top = (window.screen.height / 2) - (height / 2);
         
@@ -23,6 +23,9 @@ class Auth {
             ,'Spotify'          
             ,`menubar=no,location=no,resizable=no,scrollbars=no,status=no,width=${width},height=${height},top=${top},left=${left}`   
         );
+    }
+    get isAuthenticated(){
+        return Boolean(this.accessToken); 
     }
     get accessToken(){
         var token,   
@@ -40,17 +43,23 @@ class Auth {
         localStorage.setItem('pa_token', value.token);
         localStorage.setItem('pa_expires', now + value.validTo);
     }
-    get userName(){
-        return localStorage.getItem('pa_username', '');
+    get userId(){
+        return localStorage.getItem('pa_userid', '');
     }
-    set userName(value){
-        localStorage.setItem('pa_username', value);
+    set userId(value){
+        localStorage.setItem('pa_userid', value);
     }
     get userCountry(){
         return localStorage.getItem('pa_usercountry', 'US');
     }
     set userCountry(value){
         localStorage.setItem('pa_usercountry', value);
+    }
+    get userName(){
+        return localStorage.getItem('pa_username', '');
+    }
+    set userName(value){
+        localStorage.setItem('pa_username', value);
     }
 }
 
