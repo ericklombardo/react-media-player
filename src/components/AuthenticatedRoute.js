@@ -15,10 +15,7 @@ class AuthenticatedRoute extends Component{
                 auth.isAuthenticated ? (
                 <Component {...props}/>
                 ) : (
-                <Redirect to={{
-                    pathname: '/login',
-                    state: { from: props.location }
-                }}/>
+                <Redirect to="/" />
                 )
             )}/>            
         );

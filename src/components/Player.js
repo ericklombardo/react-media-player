@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Switch, Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import Header from './Header';
 import Navbar from './Navbar';
 import PlayerControl from './PlayerControl';
@@ -16,10 +16,8 @@ class Player extends Component{
                     <div className="midgroup">
                         <Navbar />
                         <div className="mainview">
-                            <Switch>
-                                <Route path="/playlists"  component={SearchResults}/>
-                                <Route path="/playlists/:id" component={Playlist}/>
-                            </Switch>
+                            <Route path="/player/search" component={SearchResults}/>
+                            <Route path="/player/playlists/:id" component={Playlist}/>
                         </div>
                     </div>
                     <PlayerControl />

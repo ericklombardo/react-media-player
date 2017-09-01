@@ -16,7 +16,6 @@ class Login extends Component {
         if (event.origin !== "http://localhost:3000"){
             return;
         }
-        console.log('got postmessage', event);
         var hash = event.data;
         if (hash.type === 'access_token') {
             auth.accessToken = {token: hash.access_token, validTo: hash.expires_in || 60};
@@ -34,7 +33,7 @@ class Login extends Component {
     }
     render(){
         if(this.state.isAuthenticated){
-            return <Redirect to="/"/>;
+            return <Redirect to="/player/search"/>;
         }
         return (
             <div className="fullview loginview">

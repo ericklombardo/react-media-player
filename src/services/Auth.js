@@ -9,7 +9,7 @@ class Auth {
         }
         this.clientId = 'e6f562490fd94f28be08dc7fb8fabfe0';
         this.redirectUri = 'http://localhost:3000/callback.html';
-        this.instance = this;    
+        this.instance = this;
     }
     openLogin(){
         var url = 'https://accounts.spotify.com/authorize',
