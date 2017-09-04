@@ -24,6 +24,9 @@ class Auth {
             ,`menubar=no,location=no,resizable=no,scrollbars=no,status=no,width=${width},height=${height},top=${top},left=${left}`   
         );
     }
+    logout(){
+        
+    }
     get isAuthenticated(){
         return Boolean(this.accessToken); 
     }

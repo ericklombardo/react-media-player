@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import PlaylistItem from './PlaylistItem';
 import '../App.css';
 
-class SearchResults extends Component{
+class FeaturedPlaylists extends Component{
     render(){
         return (
             <div>
-                <h1>Showing results for {this.props.searchQuery}</h1>
-                <hr/>
+                <h1>Featured Playlists</h1>
+                <hr/><br/>
                 <ul className="playlists">
                     <h4>PLAYLISTS</h4>
-                    <br/>
-                    { this.props.playlists && this.props.playlists.items.length 
-                      ? this.props.playlists.items.map(p => <PlaylistItem key={p.id} item={p} />)
+                    { this.state.playlists && this.state.playlists.length 
+                      ? this.state.playlists.map(p => <PlaylistItem item={p} />)
                       : ''
                     }
                     <hr/>
@@ -22,4 +21,4 @@ class SearchResults extends Component{
     }
 }
 
-export default SearchResults;
+export default FeaturedPlaylists;

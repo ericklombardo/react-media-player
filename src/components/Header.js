@@ -1,8 +1,29 @@
 import React, {Component} from 'react';
+import auth from '../services/Auth';
+import '../App.css';    
 
 class Header extends Component{
+    state = {
+        userName: auth.userName
+    }
+    handleLogout = () => {
+        auth.logout();
+    }
     render(){
-        return <h1>header</h1>;
+        return (
+            <div className="topgroup">
+                <div className="searchbox">
+                    <input type="text" onChange={this.props.handleSearch} placeholder="Search..." />
+                </div>
+                <div className="titlebox">
+                    <a>SAMPLE PLAYER APPLICATION</a>
+                </div>
+                <div className="userbox">
+                    Signed in as <b><a>{this.state.userName}</a></b> 
+                    {" "}<a onClick={this.handleLogout}>Log out</a>
+                </div>
+            </div>            
+        );
     }
 }
 

@@ -1,4 +1,5 @@
 import auth from './Auth';
+import {isoString} from '../utils/utils.js';
 
 /**
  * Singleton PlayerApi class (https://www.sitepoint.com/javascript-design-patterns-singleton/)
@@ -11,7 +12,7 @@ class PlayerApi{
         }
         this.baseUrl = 'https://api.spotify.com/v1';
         this.instance = this;    
-    }     
+    }
     headers()  {
         return new Headers({
             'Authorization': `Bearer ${auth.accessToken}`
@@ -46,6 +47,21 @@ class PlayerApi{
                 throw new Error('Error api searching');
             });
     }  
+    getFeaturedPlaylists(){
+        var options = {
+            method: 'GET',
+            headers : this.headers()
+        };
+        var timestamp = isoString(new Date());    
+        return fetch(`${this.baseUrl}/browse/featured-playlists?country=${encodeURIComponent(auth.userCountry)}&timestamp=${timestamp}`, options)
+            .then(response => {
+                if(response.ok){
+                    return response.json();
+                }
+                console.log(response);
+                throw new Error('Error api featured-playlists');
+            });
+    }      
 }
 
 const api = new PlayerApi();

@@ -269,7 +269,6 @@ hr {
 	top: 0px;
 	width: 100%;
 	height: auto;
-	bottom: 260px;
 	padding: 0px;
 	overflow: auto;
 }
@@ -552,7 +551,7 @@ ul.albums li, ul.playlists li, ul.genres li {
 	float: left;
 	position: relative;
 	width: 160px;
-	height: 220px;
+	height: 160px;
 	margin: 0 10px 10px 0;
 	background-color: #393b40;
 }
@@ -566,15 +565,12 @@ ul.albums li p, ul.playlists li p, ul.genres li p {
 	padding: 10px;
 }
 
-responsive-cover {
+.responsive-cover {
+	background-image:  url('images/placeholder-playlist.png');
 	display:block;
 	height:100%;
 	width:100%;
 	background-size: cover;
-}
-
-responsive-cover.responsive-cover-playlist {
-  background-image: url('images/placeholder-playlist.png');
 }
 
 .searchresult {
