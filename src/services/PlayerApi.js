@@ -38,15 +38,42 @@ class PlayerApi{
             headers : this.headers()
         };
 
-        return fetch(`${this.baseUrl}/search?type=playlist&market=from_token&q=${encodeURIComponent(query)}`, options)
+        return fetch(`${this.baseUrl}/search?type=playlist,artist&market=from_token&q=${encodeURIComponent(query)}`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();
                 }
-                console.log(response);
                 throw new Error('Error api searching');
             });
     }  
+    getPlayList(owner, id){
+        var options = {
+            method: 'GET',
+            headers : this.headers()
+        };
+
+        return fetch(`${this.baseUrl}/users/${encodeURIComponent(owner)}/playlists/${encodeURIComponent(id)}`, options)
+            .then(response => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw new Error('Error getting playlist');
+            });
+    }  
+    getTrack(id) {
+        var options = {
+            method: 'GET',
+            headers : this.headers()
+        };
+        return fetch(`${this.baseUrl}/tracks/${encodeURIComponent(id)}`, options)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            }
+            console.log(response);
+            throw new Error('Error getting track');
+        });
+    }
     getFeaturedPlaylists(){
         var options = {
             method: 'GET',

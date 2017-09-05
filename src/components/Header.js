@@ -13,10 +13,10 @@ class Header extends Component{
         return (
             <div className="topgroup">
                 <div className="searchbox">
-                    <input type="text" onChange={this.props.handleSearch} placeholder="Search..." />
+                    <input type="text" onChange={this.props.onSearch} placeholder="Search..." />
                 </div>
                 <div className="titlebox">
-                    <a>SAMPLE PLAYER APPLICATION</a>
+                    <a>REACT PLAYER APPLICATION</a>
                 </div>
                 <div className="userbox">
                     Signed in as <b><a>{this.state.userName}</a></b> 
