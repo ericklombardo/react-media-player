@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import playerApi from '../services/PlayerApi';
+import playQueue from '../services/PlayQueue';
 import Cover from './Cover';
 import '../App.css';
 
@@ -21,7 +22,22 @@ class Playlist extends Component{
                     tracks: result.tracks.items
                 });
             });
+    }
+    handlePlay = (event) => {
+        var trackId = event.target.dataset.value;
+        var trackIds = this.state.tracks.map(t => t.track.id);
+        playQueue.clear();
+        playQueue.enqueueList(trackIds);
+        playQueue.getTrack(trackIds.indexOf(trackId))
+            .then(track => this.props.onPlay(track));
     }  
+    handlePlayAll = () => {
+        var trackIds = this.state.tracks.map(t => t.track.id);
+        playQueue.clear();
+        playQueue.enqueueList(trackIds);
+        playQueue.getTrack(0)
+            .then(track => this.props.onPlay(track));        
+    }
     render(){
         return (
             <div>
@@ -33,7 +49,7 @@ class Playlist extends Component{
                     <h4>PLAYLIST</h4>
                     <h1>{this.state.name}</h1>
                     <div className="buttons">
-                        <a onClick={this.props.playAll} className="button green">PLAY ALL</a>
+                        <a onClick={this.handlePlayAll} className="button green">PLAY ALL</a>
                     </div>
                 </header>            
                 <hr/>
@@ -41,6 +57,7 @@ class Playlist extends Component{
                 <table className="tracks">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>TRACK</th>
                             <th>ARTIST</th>
                             <th>TIME</th>
@@ -52,13 +69,16 @@ class Playlist extends Component{
                         { this.state.tracks.map(t => 
                         <tr key={t.track.id} className={this.state.playing ? 'playing': ''} >
                             <td>
-                                <a className="mousePointer" onClick={this.props.onPlay} data-value={t.track.id}>{t.track.name}</a>
+                                <a className="mousePointer" onClick={this.handlePlay}><img data-value={t.track.id} alt="play" src="/images/play-small.png" /></a>
+                            </td>
+                            <td>
+                                <a className="mousePointer" onClick={this.handlePlay} data-value={t.track.id}>{t.track.name}</a>
                             </td>
                             <td>
                                 <a>{t.track.artists[0].name}</a>
                             </td>
                             <td className="nowrap">
-                                { t.track.duration_ms  }
+                                { ((t.track.duration_ms/1000)/60).toFixed(2)  }
                             </td>
                             <td>
                                 <a>{t.track.album.name}</a>

@@ -13,17 +13,25 @@ class PlayerApi{
         this.baseUrl = 'https://api.spotify.com/v1';
         this.instance = this;    
     }
-    headers()  {
+    headers(token)  {        
         return new Headers({
-            'Authorization': `Bearer ${auth.accessToken}`
+            'Authorization': `Bearer ${token}`
         });
+    }
+    authFetch(url, options){
+        var token = auth.accessToken;
+        if(token){
+            options.headers = this.headers(token)
+            return fetch(url, options);
+        }
+        auth.logout();
     }
     getMe(){
         var options = {
-            method: 'GET',
-            headers : this.headers()
+            method: 'GET'
         };
-        return fetch(`${this.baseUrl}/me`, options)
+        
+        return this.authFetch(`${this.baseUrl}/me`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();
@@ -34,11 +42,10 @@ class PlayerApi{
     }
     search(query){
         var options = {
-            method: 'GET',
-            headers : this.headers()
+            method: 'GET'
         };
-
-        return fetch(`${this.baseUrl}/search?type=playlist,artist&market=from_token&q=${encodeURIComponent(query)}`, options)
+        
+        return this.authFetch(`${this.baseUrl}/search?type=playlist,artist&market=from_token&q=${encodeURIComponent(query)}`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();
@@ -48,24 +55,22 @@ class PlayerApi{
     }  
     getPlayList(owner, id){
         var options = {
-            method: 'GET',
-            headers : this.headers()
+            method: 'GET'
         };
 
-        return fetch(`${this.baseUrl}/users/${encodeURIComponent(owner)}/playlists/${encodeURIComponent(id)}`, options)
+        return this.authFetch(`${this.baseUrl}/users/${encodeURIComponent(owner)}/playlists/${encodeURIComponent(id)}`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();
                 }
-                throw new Error('Error getting playlist');
+                throw new Error('Error getting playlist', response);
             });
     }  
     getTrack(id) {
         var options = {
-            method: 'GET',
-            headers : this.headers()
+            method: 'GET'
         };
-        return fetch(`${this.baseUrl}/tracks/${encodeURIComponent(id)}`, options)
+        return this.authFetch(`${this.baseUrl}/tracks/${encodeURIComponent(id)}`, options)
         .then(response => {
             if(response.ok){
                 return response.json();
@@ -76,11 +81,10 @@ class PlayerApi{
     }
     getFeaturedPlaylists(){
         var options = {
-            method: 'GET',
-            headers : this.headers()
+            method: 'GET'
         };
         var timestamp = isoString(new Date());    
-        return fetch(`${this.baseUrl}/browse/featured-playlists?country=${encodeURIComponent(auth.userCountry)}&timestamp=${timestamp}`, options)
+        return this.authFetch(`${this.baseUrl}/browse/featured-playlists?country=${encodeURIComponent(auth.userCountry)}&timestamp=${timestamp}`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();

@@ -7,19 +7,26 @@ import '../App.css';
 class Login extends Component {
     constructor(props) {
         super(props);
+        var isAuthenticated = auth.isAuthenticated;
         this.state = {
-            isAuthenticated : auth.isAuthenticated
+            isAuthenticated : isAuthenticated
         };
-        window.addEventListener("message", this.callbackLogin.bind(this), false);        
+        if(!isAuthenticated){
+            window.addEventListener("message", this.callbackLogin.bind(this), false);        
+        }
     }
     callbackLogin(event){
         if (event.origin !== "http://localhost:3000"){
             return;
         }
         var hash = event.data;
-        if (hash.type === 'access_token') {
-            auth.accessToken = {token: hash.access_token, validTo: hash.expires_in || 60};
-            playerApi.getMe().then(user => {
+        if (hash.access_token) {
+            auth.accessToken = {
+                token: hash.access_token,
+                validTo: hash.expires_in        
+            }
+            playerApi.getMe()
+            .then(user => {
                 console.log('user info', user);
                 auth.userId = user.id;
                 auth.userName = user.display_name;

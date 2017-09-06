@@ -3,27 +3,24 @@
     <script>
     
     function init() {
-        console.log('hash', location.hash);
-    
         var hash = {};
-        location.hash.replace(/^#\/?/, '').split('&').forEach(function(kv) {
+        location.hash.substr(1).split('&').forEach(function(kv) {
             var spl = kv.indexOf('=');
             if (spl != -1) {
                 hash[kv.substring(0, spl)] = decodeURIComponent(kv.substring(spl+1));
             }
         });
-    
-        console.log('initial hash', hash);
-    
+        //Implicit Grant Flow
+        //https://developer.spotify.com/web-api/authorization-guide/#implicit-grant-flow
         if (hash.access_token) {
             setTimeout(() => {
                 window.opener.postMessage({
-                    type: 'access_token',
+                    type: 'Bearer',
                     access_token: hash.access_token,
-                    expires_in: hash.expires_in || 0
+                    expires_in: hash.expires_in
                 }, 'http://localhost:3000');
                 window.close();
-            }, 1000)            
+            }, 1000)
         }
     }
     

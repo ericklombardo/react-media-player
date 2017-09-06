@@ -1,24 +1,19 @@
 import React, {Component} from 'react';
-import playerApi from '../services/PlayerApi';
+import audio from '../services/AudioAdapter';
+import playQueue from '../services/PlayQueue';
 import '../App.css';
 
 class PlayerControl extends Component{
-    state = {
-        progress: 0,
-        duration: 0,
-        playing: false
-    }
-    componentDidMount(){
-        this.audio = new Audio();
-        this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata, false);
-        this.audio.addEventListener('ended', this.onEnded, false);
-        this.playing = false;
-		this.volume = 100;
-		this.progress = 0;
-		this.duration = 0;
-        this.track = null;
+    constructor (props){
+        super(props);
         this.tickTimer = 0;
-    }
+        this.state = {
+            progress: 0,
+            duration: 0,
+            playing: false
+        };            
+        audio.onStartPlay = this.onStartPlay;
+    }    
     enableTick() {
         this.disableTick();
         this.tickTimer = setInterval(() => this.tick(), 100);
@@ -29,88 +24,74 @@ class PlayerControl extends Component{
         }
     }
     tick() {
-        if (!this.playing) {
+        if (!audio.isPlaying) {
             return;
         }
-        this.progress = this.audio.currentTime * 1000.0;
-        this.props.onTrackProgress(this.progress);
-    }    
-    onLoadedMetadata = () => {
-        this.duration = this.audio.duration * 1000.0;
-        this.audio.volume = this.volume / 100.0;            
-        this.progress = 0;
-        this.audio.play();              
-        this.props.onTrackProgress(this.progress);
-        this.enableTick();                  
-        this.props.onPlay();
-    }    
-    onEnded = () => {
-        this.playing = false;
-        this.track = null;
-        this.disableTick();
-        this.props.onEndtrack();
-    }
-    play = () => {
-        var trackId = this.props.trackId;
-        if(!trackId) return;
-        console.log('Playback::startPlaying', trackId);
-        this.track = null;
-        this.playing = true;
-        this.progress = 0;
         this.setState({
-            playing: true,
-            progress: 0
+            progress : audio.currentTime.toFixed(2)
         });
-        playerApi.getTrack(trackId).then(trackData => {
-            console.log('playback got track', trackData);
-            this.track = trackData;
-            if (this.audio.src !== null) {
-                this.audio.pause();
-                this.audio.src = null;
-            }
-            this.audio.src = trackData.preview_url;    
+    }    
+    onStartPlay = (progress, duration) => {        
+        this.setState({
+            progress: progress.toFixed(2),
+            duration: duration.toFixed(2),
+            playing: true
         });
-    }        
-    pause = () => {
-
+        this.enableTick();
     }
-    prev = () => {
-
+    handleResume = () => {
+        audio.resume();
+        this.setState({
+            playing : true
+        });
+        this.enableTick();
     }
-    next = () => {
-
+    handlePause = () => {
+        audio.pause();
+        this.setState({
+            playing : false
+        });
+        this.disableTick();
     }
-    changeVolume = () => {
-
+    handlePrev = () => {
+        playQueue.prevTrack()
+            .then(track => audio.play(track.preview_url));
     }
-    changeProgress = () => {
-
+    handleNext = () => {
+        playQueue.nextTrack()
+            .then(track => audio.play(track.preview_url));
+    }
+    handleChangeVolume = (event) => {
+        audio.changeVolume(event.target.value);
+    }
+    handleChangeProgress = (event) => {
+        audio.changeProgress(event.target.value);
     }
     render(){
         return (
             <div className="bottomgroup">
                 <div className="leftcontrols">
                     <div className="prevbutton">
-                        <a onClick={this.prev}><img alt="previous" src="/images/btn-prev.png" /></a>
+                        <a onClick={this.handlePrev}><img alt="previous" src="/images/btn-prev.png" /></a>
                     </div>
                     <div className="playbutton">
                         { !this.state.playing ?
-                        <a onClick={this.play}><img alt="play" src="/images/btn-play.png" /></a> :
-                        <a onClick={this.pause}><img alt="pause" src="/images/btn-pause.png" /></a>
+                        <a onClick={this.handleResume}><img alt="play" src="/images/btn-play.png" /></a> :
+                        <a onClick={this.handlePause}><img alt="pause" src="/images/btn-pause.png" /></a>
                         }
                     </div>
                     <div className="nextbutton">
-                        <a onClick={this.next}><img alt="" src="/images/btn-next.png" /></a>
+                        <a onClick={this.handleNext}><img alt="" src="/images/btn-next.png" /></a>
                     </div>
                     <div className="volume">
-                        <input type="range" onChange={this.changeVolume} min="0" max="100" />
+                        <input type="range" onChange={this.handleChangeVolume} min="0" max="100" />
                     </div>
                 </div>
                 <div className="seekcontrols">
                     <div className="progress">{ this.state.progress }</div>
                     <div className="duration">{ this.state.duration }</div>
                     <div className="slider">
-                        <input type="range" onChange={this.changeProgress} min="0" max={this.state.duration} />
+                        <input type="range" onChange={this.handleChangeProgress} min="0" max={this.state.duration} />
                     </div>
                 </div>
             </div>            

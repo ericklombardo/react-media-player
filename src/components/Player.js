@@ -7,19 +7,20 @@ import SearchResults from './SearchResults';
 import Playlist from './Playlist';
 import FeaturedPlaylists from './FeaturedPlaylists';
 import playerApi from '../services/PlayerApi';
+import audio from '../services/AudioAdapter';
+
 import {debounce} from '../utils/utils.js';
 import '../App.css';
 
 /**
  * Main container component.
- * This view represent the main app layout  and workflow
+ * This UI represent the main app layout and player workflow
  */
 class Player extends Component{
     state = {
         playlists : null,
         artists : null,
-        searchQuery : null,
-        trackId: null
+        searchQuery : null
     }
     debounceSearch = debounce(value => {
         playerApi.search(value)
@@ -34,13 +35,25 @@ class Player extends Component{
     }, 500)    
     handleSearch = (event) => {
         var query = event.target.value;
-        if (query.length < 4) return;
+        if (query.length < 4) {
+            if(!query.length){
+                this.setState({
+                    playlists : null,
+                    artists : null,
+                    searchQuery : null            
+                });                    
+            }
+            return;
+        }
         this.debounceSearch(query);
     }
-    handlePlay = (event) => {
-        this.setState({
-            trackId: event.target.dataset.value
-        });
+    handlePlay = (track) => {
+        if (!track.preview_url){
+            alert(`the track ${track.name} doesnt have preview`);
+            return;
+        }
+        
+        audio.play(track.preview_url);
     }
     render(){
         return (
@@ -60,7 +73,7 @@ class Player extends Component{
                             }/>
                         </div>
                     </div>
-                    <PlayerControl trackId={this.state.trackId} />
+                    <PlayerControl />
                 </div>
             </div>
         );

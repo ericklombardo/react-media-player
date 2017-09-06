@@ -7,15 +7,20 @@ class Auth {
         if(this.instance){
             return this.instance;
         }
+        this.appHost = 'http://localhost:3000';
         this.clientId = 'e6f562490fd94f28be08dc7fb8fabfe0';
-        this.redirectUri = 'http://localhost:3000/callback.html';
+        this.redirectUri = `${this.appHost}/callback.html`;
         this.instance = this;
     }
+    /**
+     * Implicit Grant Flow
+     * https://developer.spotify.com/web-api/authorization-guide/#implicit-grant-flow
+     */
     openLogin(){
         var url = 'https://accounts.spotify.com/authorize',
             scopes = ['user-read-private', 'playlist-read-private', 'user-library-read'],
             width = 450,
-            height = 700,
+            height = 600,
             left = (window.screen.width / 2) - (width / 2),
             top = (window.screen.height / 2) - (height / 2);
         
@@ -25,7 +30,8 @@ class Auth {
         );
     }
     logout(){
-        
+        localStorage.clear();
+        window.location.href = this.appHost;
     }
     get isAuthenticated(){
         return Boolean(this.accessToken); 
@@ -44,7 +50,7 @@ class Auth {
     set accessToken(value){
         var now = (new Date()).getTime();
         localStorage.setItem('pa_token', value.token);
-        localStorage.setItem('pa_expires', now + value.validTo);
+        localStorage.setItem('pa_expires', now + (value.validTo * 1000));
     }
     get userId(){
         return localStorage.getItem('pa_userid', '');

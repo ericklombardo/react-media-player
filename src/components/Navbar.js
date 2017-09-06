@@ -9,6 +9,7 @@ class Navbar extends Component{
             <div className="list scrollable">
                 <b><a>MAIN</a></b>
                 <ul className="menuitems">
+                    <li><Link to="/player/search" className="active">Search</Link></li>
                     <li><Link to="/player/featured-playlists" className="active">Featured Playlists</Link></li>
                 </ul>
             </div>

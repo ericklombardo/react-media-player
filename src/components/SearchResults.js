@@ -14,7 +14,7 @@ class SearchResults extends Component{
                     { this.props.playlists && this.props.playlists.items.length 
                       ? this.props.playlists.items.map(p =>
                         <SearchItem key={p.id} item={p} url={`/player/playlists/${p.owner.id}/${p.id}`} />)
-                      : <h3>Not found playlists</h3>
+                      : <h3>Not playlists founded</h3>
                     }
                     <hr/>
                     <h4>ARTISTS</h4>
@@ -22,7 +22,7 @@ class SearchResults extends Component{
                     { this.props.artists && this.props.artists.items.length 
                       ? this.props.artists.items.map(p => 
                         <SearchItem key={p.id} item={p} url={`/player/artists/${p.id}`} />)
-                      : <h3>Not found artists</h3>
+                      : <h3>Not artists founded</h3>
                     }
                     <hr/>                    
                 </ul>            
