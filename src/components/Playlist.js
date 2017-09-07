@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import playerApi from '../services/PlayerApi';
 import playQueue from '../services/PlayQueue';
 import Cover from './Cover';
+import {formatSeconds} from '../utils/utils.js';
 import '../App.css';
 
 class Playlist extends Component{
@@ -25,16 +26,33 @@ class Playlist extends Component{
     }
     handlePlay = (event) => {
         var trackId = event.target.dataset.value;
-        var trackIds = this.state.tracks.map(t => t.track.id);
+        var trackIds = [], index;
+        this.state.tracks.forEach(t => {
+            if(t.track.preview_url) 
+                trackIds.push(t.track.id);
+        });
         playQueue.clear();
         playQueue.enqueueList(trackIds);
-        playQueue.getTrack(trackIds.indexOf(trackId))
+        index = trackIds.indexOf(trackId);
+        if(index < 0){
+            alert('Preview track not available');
+            return;
+        }
+        playQueue.getTrack(index)
             .then(track => this.props.onPlay(track));
     }  
     handlePlayAll = () => {
-        var trackIds = this.state.tracks.map(t => t.track.id);
+        var trackIds = [];
+        this.state.tracks.forEach(t => {
+            if(t.track.preview_url) 
+                trackIds.push(t.track.id);
+        });
         playQueue.clear();
         playQueue.enqueueList(trackIds);
+        if(!trackIds.length){
+            alert('Preview tracks not available');
+            return;            
+        }
         playQueue.getTrack(0)
             .then(track => this.props.onPlay(track));        
     }
@@ -69,7 +87,10 @@ class Playlist extends Component{
                         { this.state.tracks.map(t => 
                         <tr key={t.track.id} className={this.state.playing ? 'playing': ''} >
                             <td>
-                                <a className="mousePointer" onClick={this.handlePlay}><img data-value={t.track.id} alt="play" src="/images/play-small.png" /></a>
+                                <a className="mousePointer" onClick={this.handlePlay}>
+                                    <img data-value={t.track.id} alt="play" 
+                                    src={`/images/${t.track.preview_url ? 'play-small' : 'play-disabled'}.png`} />
+                                </a>
                             </td>
                             <td>
                                 <a className="mousePointer" onClick={this.handlePlay} data-value={t.track.id}>{t.track.name}</a>
@@ -78,7 +99,7 @@ class Playlist extends Component{
                                 <a>{t.track.artists[0].name}</a>
                             </td>
                             <td className="nowrap">
-                                { ((t.track.duration_ms/1000)/60).toFixed(2)  }
+                                { formatSeconds(t.track.duration_ms/1000)  }
                             </td>
                             <td>
                                 <a>{t.track.album.name}</a>

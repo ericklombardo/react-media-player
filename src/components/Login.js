@@ -16,7 +16,7 @@ class Login extends Component {
         }
     }
     callbackLogin(event){
-        if (event.origin !== "http://localhost:3000"){
+        if (event.origin !== process.env.REACT_APP_HOST){
             return;
         }
         var hash = event.data;

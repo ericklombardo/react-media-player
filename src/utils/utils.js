@@ -37,3 +37,10 @@ export function isoString(date) {
 	  ':' + pad( 0 ) +
 	  ':' + pad( 0 );
 }
+
+export function formatSeconds(duration){
+	var minutes = Math.floor(duration / 60);
+	var seconds =  Math.floor(duration - (minutes*60));
+
+	return `${minutes}:${pad(seconds)}`;
+}

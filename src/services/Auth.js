@@ -7,8 +7,8 @@ class Auth {
         if(this.instance){
             return this.instance;
         }
-        this.appHost = 'http://localhost:3000';
-        this.clientId = 'e6f562490fd94f28be08dc7fb8fabfe0';
+        this.appHost = process.env.REACT_APP_HOST;
+        this.clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
         this.redirectUri = `${this.appHost}/callback.html`;
         this.instance = this;
     }

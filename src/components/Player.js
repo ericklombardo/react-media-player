@@ -24,13 +24,19 @@ class Player extends Component{
     }
     debounceSearch = debounce(value => {
         playerApi.search(value)
-        .then(result => {
-            console.log('result for ', value, result);
+        .then(result => {            
+            let {history, location: {pathname: path} } = this.props;
+            let searchPath = '/player/search';
+                        
+            if(path !== searchPath){
+                history.push(searchPath);
+            }
             this.setState({
                 playlists : result.playlists,
                 artists : result.artists,
                 searchQuery : value            
             });
+            console.log('result for ', value, result);
         });
     }, 500)    
     handleSearch = (event) => {

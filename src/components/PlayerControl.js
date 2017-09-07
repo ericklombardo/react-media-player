@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import audio from '../services/AudioAdapter';
 import playQueue from '../services/PlayQueue';
+import {formatSeconds} from '../utils/utils.js';
 import '../App.css';
 
 class PlayerControl extends Component{
@@ -28,13 +29,13 @@ class PlayerControl extends Component{
             return;
         }
         this.setState({
-            progress : audio.currentTime.toFixed(2)
+            progress : audio.currentTime
         });
     }    
     onStartPlay = (progress, duration) => {        
         this.setState({
-            progress: progress.toFixed(2),
-            duration: duration.toFixed(2),
+            progress: progress,
+            duration: duration,
             playing: true
         });
         this.enableTick();
@@ -88,10 +89,10 @@ class PlayerControl extends Component{
                     </div>
                 </div>
                 <div className="seekcontrols">
-                    <div className="progress">{ this.state.progress }</div>
-                    <div className="duration">{ this.state.duration }</div>
+                    <div className="progress">{ formatSeconds(this.state.progress) }</div>
+                    <div className="duration">{ formatSeconds(this.state.duration) }</div>
                     <div className="slider">
-                        <input type="range" onChange={this.handleChangeProgress} min="0" max={this.state.duration} />
+                        <input type="range" value={this.state.progress} onChange={this.handleChangeProgress} min="0" max={this.state.duration} />
                     </div>
                 </div>
             </div>            

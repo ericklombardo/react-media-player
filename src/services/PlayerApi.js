@@ -36,8 +36,8 @@ class PlayerApi{
                 if(response.ok){
                     return response.json();
                 }
-                console.log(response);
-                throw new Error('Error getting user info');
+                console.error('Error getting user info: ', response);
+                return null;
             });
     }
     search(query){
@@ -50,7 +50,8 @@ class PlayerApi{
                 if(response.ok){
                     return response.json();
                 }
-                throw new Error('Error api searching');
+                console.error('Error api searching', response);
+                return null;
             });
     }  
     getPlayList(owner, id){
@@ -63,7 +64,8 @@ class PlayerApi{
                 if(response.ok){
                     return response.json();
                 }
-                throw new Error('Error getting playlist', response);
+                console.error('Error getting playlist', response);
+                return null;
             });
     }  
     getTrack(id) {
@@ -75,8 +77,8 @@ class PlayerApi{
             if(response.ok){
                 return response.json();
             }
-            console.log(response);
-            throw new Error('Error getting track');
+            console.error('Error getting track', response);
+            return null;
         });
     }
     getFeaturedPlaylists(){
@@ -89,8 +91,8 @@ class PlayerApi{
                 if(response.ok){
                     return response.json();
                 }
-                console.log(response);
-                throw new Error('Error api featured-playlists');
+                console.error('Error api featured-playlists', response);
+                return null;
             });
     }      
 }
