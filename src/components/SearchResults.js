@@ -17,14 +17,6 @@ class SearchResults extends Component{
                       : <h3>Not playlists founded</h3>
                     }
                     <hr/>
-                    <h4>ARTISTS</h4>
-                    <br/>                    
-                    { this.props.artists && this.props.artists.items.length 
-                      ? this.props.artists.items.map(p => 
-                        <SearchItem key={p.id} item={p} url={`/player/artists/${p.id}`} />)
-                      : <h3>Not artists founded</h3>
-                    }
-                    <hr/>                    
                 </ul>            
             </div>
         );
