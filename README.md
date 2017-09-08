@@ -8,7 +8,8 @@ or clone the project and run it locally.
 Note that you will need a Spotify account (either free or premium) to log in to the site.
 
 ## How to Run locally
-Just open a terminal and run
+Just open a terminal and run the folling commands
+  npm install
   npm start
 
 and open `http://localhost:3000` in a browser.
