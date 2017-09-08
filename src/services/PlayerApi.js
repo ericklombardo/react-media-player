@@ -45,7 +45,7 @@ class PlayerApi{
             method: 'GET'
         };
         
-        return this.authFetch(`${this.baseUrl}/search?type=playlist,artist&market=from_token&q=${encodeURIComponent(query)}`, options)
+        return this.authFetch(`${this.baseUrl}/search?type=playlist&market=from_token&q=${encodeURIComponent(query)}`, options)
             .then(response => {
                 if(response.ok){
                     return response.json();
@@ -78,6 +78,19 @@ class PlayerApi{
                 return response.json();
             }
             console.error('Error getting track', response);
+            return null;
+        });
+    }
+    getAlbum(id) {
+        var options = {
+            method: 'GET'
+        };
+        return this.authFetch(`${this.baseUrl}/albums/${encodeURIComponent(id)}`, options)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            }
+            console.error('Error getting album', response);
             return null;
         });
     }

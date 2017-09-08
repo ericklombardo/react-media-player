@@ -14,6 +14,7 @@ class PlayerControl extends Component{
             playing: false
         };            
         audio.onStartPlay = this.onStartPlay;
+        audio.onEndedPlay = this.onEndedPlay;
     }    
     enableTick() {
         this.disableTick();
@@ -40,27 +41,39 @@ class PlayerControl extends Component{
         });
         this.enableTick();
     }
-    handleResume = () => {
-        audio.resume();
+    onEndedPlay = () => {
         this.setState({
-            playing : true
+            progress: 0,
+            playing: false
         });
-        this.enableTick();
+        if(playQueue.isPlayingAll){
+            playQueue.nextTrack();
+        }
+        else{
+            this.disableTick();        
+        }
+    }
+    handleResume = () => {
+        if(audio.resume()){
+            this.setState({
+                playing : true
+            });
+            this.enableTick();
+        }
     }
     handlePause = () => {
-        audio.pause();
-        this.setState({
-            playing : false
-        });
-        this.disableTick();
+        if(audio.pause()){
+            this.setState({
+                playing : false
+            });
+            this.disableTick();
+        }
     }
     handlePrev = () => {
-        playQueue.prevTrack()
-            .then(track => audio.play(track.preview_url));
+        playQueue.prevTrack();
     }
     handleNext = () => {
-        playQueue.nextTrack()
-            .then(track => audio.play(track.preview_url));
+        playQueue.nextTrack();
     }
     handleChangeVolume = (event) => {
         audio.changeVolume(event.target.value);

@@ -7,7 +7,6 @@ import SearchResults from './SearchResults';
 import Playlist from './Playlist';
 import FeaturedPlaylists from './FeaturedPlaylists';
 import playerApi from '../services/PlayerApi';
-import audio from '../services/AudioAdapter';
 
 import {debounce} from '../utils/utils.js';
 import '../App.css';
@@ -53,14 +52,6 @@ class Player extends Component{
         }
         this.debounceSearch(query);
     }
-    handlePlay = (track) => {
-        if (!track.preview_url){
-            alert(`the track ${track.name} doesnt have preview`);
-            return;
-        }
-        
-        audio.play(track.preview_url);
-    }
     render(){
         return (
             <div className="fullview playerview" >            
@@ -74,9 +65,7 @@ class Player extends Component{
                                  <SearchResults {...props} playlists={this.state.playlists} artists={this.state.artists}
                                                 searchQuery={this.state.searchQuery} />
                                  }/>
-                            <Route path="/player/playlists/:owner/:id" 
-                                   render={props => <Playlist {...props} onPlay={this.handlePlay} />
-                            }/>
+                            <Route path="/player/playlists/:owner/:id" component={Playlist} />
                         </div>
                     </div>
                     <PlayerControl />

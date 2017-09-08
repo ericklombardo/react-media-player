@@ -10,9 +10,14 @@ class Cover extends Component{
             cover: this.findRightImage()
         });
     }
-    findRightImage(){
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            cover: this.findRightImage(nextProps.images)
+        });                
+    }
+    findRightImage(values){
         var elem = this.cover;
-        var images = this.props.images || [];
+        var images = values || this.props.images || [];
         var targetWidth = elem.offsetWidth * window.devicePixelRatio,
         targetHeight = elem.offsetHeight * window.devicePixelRatio;
 

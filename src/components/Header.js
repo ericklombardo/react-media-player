@@ -4,7 +4,7 @@ import '../App.css';
 
 class Header extends Component{
     state = {
-        userName: auth.userName
+        userName: auth.userId
     }
     handleLogout = () => {
         auth.logout();

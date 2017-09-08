@@ -38,8 +38,8 @@ class Playlist extends Component{
             alert('Preview track not available');
             return;
         }
-        playQueue.getTrack(index)
-            .then(track => this.props.onPlay(track));
+        playQueue.isPlayingAll = false;
+        playQueue.playTrack(index);
     }  
     handlePlayAll = () => {
         var trackIds = [];
@@ -53,8 +53,8 @@ class Playlist extends Component{
             alert('Preview tracks not available');
             return;            
         }
-        playQueue.getTrack(0)
-            .then(track => this.props.onPlay(track));        
+        playQueue.isPlayingAll = true;
+        playQueue.playTrack(0);
     }
     render(){
         return (

@@ -38,6 +38,9 @@ class AudioAdapter {
     get isPlaying(){
         return this.playing;
     }
+    get isPaused(){
+        return this.audio.paused;
+    }
     changeVolume(value){
         this.volume = value;
         this.audio.volume = value / 100.0;
@@ -47,11 +50,15 @@ class AudioAdapter {
         this.audio.currentTime = value;
     }
     resume(){
-        this.playing = true;
-        if(this.audio.paused){
-            this.audio.play();    
-            if(this.resumeCb) this.resumeCb();
-        }        
+        if (this.audio.src){
+            this.playing = true;
+            if(this.audio.paused){
+                this.audio.play();    
+                if(this.resumeCb) this.resumeCb();
+            }    
+            return true;
+        }
+        return false;
     }
     play(url){
         if(!url) return;
@@ -63,11 +70,13 @@ class AudioAdapter {
         this.audio.src = url;    
     }
     pause(){
-        if (this.audio.src !== null) {
+        if (this.audio.src) {
             this.audio.pause();
             this.playing = false;
             if (this.pauseCb) this.pauseCb();
+            return true;
         }        
+        return false;
     }
     onLoadedMetadata = () => {
         this.duration = this.audio.duration;
